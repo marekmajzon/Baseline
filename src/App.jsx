@@ -560,8 +560,8 @@ function LessonRunner({ pick, onComplete, intensity }) {
               </button>
             ))}
           </nav>
-        </header>
-
+        </Card>
+)
         {tab === "today" && (
           <div className="space-y-4">
             <Card>
