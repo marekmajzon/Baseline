@@ -755,6 +755,7 @@ function LessonRunner({ pick, onComplete, intensity }) {
           MVP prototyp • lokálne ukladanie • trauma‑informed mikro‑kroky
         </footer>
       </div>
+        </div>  
     </div>
   );
 }
