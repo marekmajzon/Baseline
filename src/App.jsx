@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-// CPTSD Daily Practice – Duolingo-style MVP
-// - Offline, single-file prototype
+// Baseline – Duolingo-style MVP (single file)
 // - Stores progress in localStorage
-// - Gentle, trauma-informed: micro-lessons + practice + reflection
-// NOTE: This is not a medical device and not a substitute for therapy.
+// - Phase-based progression (priorities)
+// - Gentle / Standard intensity
+// NOTE: Not a medical device. Not a substitute for therapy.
 
-const STORAGE_KEY = "cptsd_duo_mvp_v1";
+const STORAGE_KEY = "baseline_mvp_v1";
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
@@ -45,30 +45,30 @@ function computeStreak(lastDoneDate, streak) {
 const MODULES = [
   {
     id: "reg",
-    title: "Telo a regulácia",
-    why: "Znížiť bazálne napätie. Bez toho sa všetko rieši výkonom alebo alkoholom.",
+    title: "Priorita 1: Regulácia nervového systému",
+    why: "Bez nej budeš všetko riešiť výkonom. Cieľ: znížiť baseline napätie, potrebu alkoholu, hypervigilanciu.",
     lessons: [
       {
         id: "reg-1",
         title: "Predĺžený výdych (2 min)",
         teach:
-          "Cieľ nie je ‚relaxovať‘. Cieľ je dať nervovému systému signál bezpečia. Predĺžený výdych zvyšuje parasympatikus.",
+          "Cieľ nie je „relaxovať“. Cieľ je dať nervovému systému signál bezpečia. Predĺžený výdych podporuje parasympatikus.",
         practice: [
           { type: "breath", label: "Dýchaj 4 sekundy nádych, 6 sekúnd výdych. 10 cyklov." },
           { type: "body", label: "Uvoľni čeľusť, ramená, brucho. Len si všimni napätie." },
         ],
-        reflect: "Po cvičení: aké je napätie v tele (0–10)?" ,
+        reflect: "Po cvičení: aké je napätie v tele (0–10)?",
       },
       {
         id: "reg-2",
         title: "Orientácia v priestore (60 s)",
         teach:
-          "Hypervigilancia sa dá znížiť orientáciou: oči skenujú bezpečné prvky, mozog dostane ‚tu a teraz‘.",
+          "Hypervigilancia sa dá znížiť orientáciou: oči skenujú bezpečné prvky, mozog dostane „tu a teraz“.",
         practice: [
           { type: "body", label: "Pozri sa na 5 vecí, ktoré sú príjemné/neutral. Pomenuj ich nahlas." },
           { type: "body", label: "Nájdi 3 pevné body (stolička, stôl, podlaha). Vnímaj oporu." },
         ],
-        reflect: "Čo sa zmenilo v tele (0–10)?" ,
+        reflect: "Čo sa zmenilo v tele (0–10)?",
       },
       {
         id: "reg-3",
@@ -79,14 +79,14 @@ const MODULES = [
           { type: "body", label: "Stlač dlane na 5 sekúnd, potom uvoľni. 5 opakovaní." },
           { type: "body", label: "Zívni/prehltni. Uvoľni jazyk od podnebia." },
         ],
-        reflect: "Kde býva tvoje ‚default‘ napätie najviac?" ,
+        reflect: "Kde býva tvoje „default“ napätie najviac?",
       },
     ],
   },
   {
     id: "dep",
-    title: "Emočná deprivácia",
-    why: "Jadro: ‚nie som primárny‘. Učíš telo prijímať starostlivosť a pomenovať potreby.",
+    title: "Priorita 2: Emotional Deprivation",
+    why: "Jadro: „Nikto tu pre mňa nie je.“ Nelieči sa analýzou, ale vzťahovou skúsenosťou.",
     lessons: [
       {
         id: "dep-1",
@@ -95,9 +95,9 @@ const MODULES = [
           "Deprivácia často znamená, že potreby sú rozmazané. Najprv ich treba pomenovať bez hanby.",
         practice: [
           { type: "pick", label: "Vyber 1 potrebu dnes", options: ["pokoj", "blízkosť", "uznanie", "oddych", "jasnosť", "opora"] },
-          { type: "text", label: "Jedna veta: ‚Dnes potrebujem…‘" },
+          { type: "text", label: "Jedna veta: „Dnes potrebujem…“" },
         ],
-        reflect: "Ako ťažké bolo potrebu priznať (0–10)?" ,
+        reflect: "Ako ťažké bolo potrebu priznať (0–10)?",
       },
       {
         id: "dep-2",
@@ -105,39 +105,39 @@ const MODULES = [
         teach:
           "Korektívna skúsenosť vzniká, keď požiadam a svet sa nezrúti. Začíname mini žiadosťou.",
         practice: [
-          { type: "text", label: "Napíš 1 mikro-žiadosť (napr. ‚Môžeme si dnes zavolať 10 min?‘)" },
+          { type: "text", label: "Napíš 1 mikro-žiadosť (napr. „Môžeme si dnes zavolať 10 min?“)" },
           { type: "pick", label: "Komu by si to vedel poslať?", options: ["partner", "kamarát", "súrodenec", "kolega", "terapeut", "niekto iný"] },
         ],
-        reflect: "Čo sa bojíš, že sa stane, keď požiadaš?" ,
+        reflect: "Čo sa bojíš, že sa stane, keď požiadaš?",
       },
       {
         id: "dep-3",
         title: "Prijať (nie len dať)",
         teach:
-          "Self-sacrifice + deprivácia: dávaš, aby si mal vzťah. Teraz trénuješ prijatie bez výkonu.",
+          "Self-sacrifice + deprivácia: dávaš, aby si mal vzťah. Trénujeme prijatie bez výkonu.",
         practice: [
           { type: "pick", label: "Vyber jednu vec, ktorú dnes príjmeš", options: ["kompliment", "pomoc", "čas", "nežnosť", "odpustenie", "nič nerobiť"] },
-          { type: "text", label: "Jedna veta: ‚Ďakujem, beriem to.‘" },
+          { type: "text", label: "Jedna veta: „Ďakujem, beriem to.“" },
         ],
-        reflect: "Aké pocity pri prijímaní (hanba/úľava/odpor)?" ,
+        reflect: "Aké pocity pri prijímaní (hanba/úľava/odpor)?",
       },
     ],
   },
   {
     id: "anger",
-    title: "Hnev a hranice",
-    why: "Potlačený hnev sa mení na náročnosť, napätie a telo. Učíš sa hnev bezpečne cítiť a vyjadriť.",
+    title: "Priorita 3: Hnev",
+    why: "U teba je potlačený. Ak sa neintegruje: ide do tela (ekzém), do náročnosti, do perfekcionizmu.",
     lessons: [
       {
         id: "ang-1",
         title: "Hnev ≠ agresia (2 min)",
         teach:
-          "Hnev je informácia: ‚niečo prekročilo hranicu‘. Agresia je správanie. Cieľ je cítiť hnev bez ubližovania.",
+          "Hnev je informácia: „niečo prekročilo hranicu“. Agresia je správanie. Cieľ je cítiť hnev bez ubližovania.",
         practice: [
           { type: "pick", label: "Kde cítiš hnev v tele?", options: ["hrudník", "krk", "žalúdok", "ruky", "čeľusť", "neviem"] },
           { type: "body", label: "Zatni päste na 3 sekundy, potom uvoľni. 10×." },
         ],
-        reflect: "Čo hnev chráni? (potreba, hranica, hodnota)" ,
+        reflect: "Čo hnev chráni? (potreba, hranica, hodnota)",
       },
       {
         id: "ang-2",
@@ -145,10 +145,10 @@ const MODULES = [
         teach:
           "Hranice sa rodia v malých vetách. Nie v hádke. Trénujeme formát.",
         practice: [
-          { type: "text", label: "Doplň vetu: ‚Keď ____, potrebujem ____.‘" },
-          { type: "text", label: "Alternatíva: ‚Teraz nie. Ozvem sa o ____.‘" },
+          { type: "text", label: "Doplň vetu: „Keď ____, potrebujem ____.“" },
+          { type: "text", label: "Alternatíva: „Teraz nie. Ozvem sa o ____.“" },
         ],
-        reflect: "Ako bezpečné je pre teba povedať ‚nie‘ (0–10)?" ,
+        reflect: "Ako bezpečné je pre teba povedať „nie“ (0–10)?",
       },
       {
         id: "ang-3",
@@ -156,79 +156,79 @@ const MODULES = [
         teach:
           "Keď bol hnev v detstve trestaný, telo ho drží. Dnes trénuješ, že hnev môže existovať bez bitky.",
         practice: [
-          { type: "body", label: "Polož ruku na hrudník. Povedz potichu: ‚Môj hnev je dovolený.‘" },
+          { type: "body", label: "Polož ruku na hrudník. Povedz potichu: „Môj hnev je dovolený.“" },
           { type: "body", label: "Nájdi 1 bezpečný výstup: rýchla chôdza / drepy / tras rúk 30 s." },
         ],
-        reflect: "Čo by si dnes spravil inak, keby hnev mohol byť bezpečný?" ,
+        reflect: "Čo by si dnes spravil inak, keby hnev mohol byť bezpečný?",
       },
     ],
   },
   {
     id: "intim",
-    title: "Intimita bez alarmu",
-    why: "Intimita aktivuje abandonment + depriváciu + kontrolu. Učíš sa tolerovať blízkosť po malých dávkach.",
+    title: "Priorita 4: Intimita / vzťahy",
+    why: "Až keď je stabilnejšie telo a spracovanejší hnev. Trénuješ toleranciu blízkosti bez alarmu.",
     lessons: [
       {
         id: "int-1",
         title: "Blízkosť po percentách (3 min)",
         teach:
-          "Namiesto ‚buď blízko‘ vs ‚uteč‘ trénujeme stupnicu. 20% blízkosti je úspech.",
+          "Namiesto „buď blízko“ vs „uteč“ trénujeme stupnicu. 20% blízkosti je úspech.",
         practice: [
           { type: "pick", label: "Vyber dnešné percento blízkosti", options: ["10%", "20%", "30%", "40%", "50%"] },
           { type: "text", label: "Čo to konkrétne znamená? (napr. objatie 10 s, otvorená veta, dotyk ruky)" },
         ],
-        reflect: "Aký bol alarm pri tej predstave (0–10)?" ,
+        reflect: "Aký bol alarm pri tej predstave (0–10)?",
       },
       {
         id: "int-2",
         title: "Zostať pri jednej chybe (4 min)",
         teach:
-          "Perfekcionizmus vo vzťahu je ochrana. Tréning je: všimnúť si chybu a neodísť v hlave.",
+          "Perfekcionizmus vo vzťahu je ochrana. Tréning: všimnúť si chybu a neodísť v hlave.",
         practice: [
-          { type: "text", label: "Spúšťač: akú ‚malú chybu‘ dnes toleruješ bez uzáveru?" },
-          { type: "text", label: "Veta pre seba: ‚Toto je nepohodlie, nie nebezpečie.‘" },
+          { type: "text", label: "Spúšťač: akú „malú chybu“ dnes toleruješ bez uzáveru?" },
+          { type: "text", label: "Veta pre seba: „Toto je nepohodlie, nie nebezpečie.“" },
         ],
-        reflect: "Čoho sa bojíš, že sa stane, ak toleruješ nedokonalosť?" ,
+        reflect: "Čoho sa bojíš, že sa stane, ak toleruješ nedokonalosť?",
       },
       {
         id: "int-3",
-        title: "Sex – bezpečný rámec (bez detailov) (5 min)",
+        title: "Sex – bezpečný rámec (5 min)",
         teach:
-          "Keď je úzkosť vysoká, cieľ nie je ‚výkon‘. Cieľ je bezpečný rámec: dohoda, stop-signal, tempo.",
+          "Keď je úzkosť vysoká, cieľ nie je „výkon“. Cieľ je bezpečný rámec: dohoda, stop-signal, tempo.",
         practice: [
           { type: "pick", label: "Vyber 1 prvok bezpečia", options: ["stop slovo", "pauza kedykoľvek", "pomalé tempo", "svetlo/bez tmy", "bez alkoholu dnes iba dotyk", "aftercare"] },
-          { type: "text", label: "Jedna veta, ktorú povieš partnerovi: ‚Potrebujem…, aby som sa cítil bezpečne.‘" },
+          { type: "text", label: "Jedna veta pre partnera: „Potrebujem…, aby som sa cítil bezpečne.“" },
         ],
-        reflect: "Aký malý krok je dnes reálne možný bez preťaženia?" ,
+        reflect: "Aký malý krok je dnes reálne možný bez preťaženia?",
       },
     ],
   },
   {
     id: "id",
-    title: "Identita po výkone",
-    why: "Keď hodnota = známky, vzniká adaptívne ja. Tu sa skladá autentické ja cez skúsenosť.",
+    title: "Priorita 5: Identita",
+    why: "Až po stabilizácii. Nie analyticky, ale experimentálne: hodnoty, mikro-voľby, ja bez výkonu.",
     lessons: [
       {
         id: "id-1",
         title: "Hodnoty (3 min)",
         teach:
-          "Identita nie je odpoveď v hlave. Je to opakované ‚čo si vyberám‘.",
+          "Identita nie je odpoveď v hlave. Je to opakované „čo si vyberám“.",
         practice: [
           { type: "pick", label: "Vyber 1 hodnotu", options: ["pravdivosť", "tvorivosť", "láskavosť", "sloboda", "pokoj", "odvaha"] },
           { type: "text", label: "Jedna mikro-akcia dnes v tej hodnote." },
         ],
-        reflect: "Ako sa cíti ‚ja‘, keď je v súlade s hodnotou?" ,
+        reflect: "Ako sa cíti „ja“, keď je v súlade s hodnotou?",
       },
       {
         id: "id-2",
         title: "Ja bez výkonu (2 min)",
         teach:
-          "Nervový systém je zvyknutý zarábať si na bezpečie. Trénujeme ‚som OK aj bez výkonu‘.",
+          "Telo je zvyknuté zarábať si na bezpečie. Trénujeme „som OK aj bez výkonu“.",
         practice: [
           { type: "body", label: "2 min nič nerob. Len sedieť. Ak príde kritika, všimni si ju." },
-          { type: "text", label: "Pomenuj hlas kritika jedným slovom (napr. ‚Tréner‘, ‚Kontrolór‘)." },
+          { type: "text", label: "Pomenuj hlas kritika jedným slovom (napr. „Tréner“, „Kontrolór“)." },
         ],
-        reflect: "Čoho sa bojíš, že sa stane, keď ‚nič‘?" ,
+        reflect: "Čoho sa bojíš, že sa stane, keď „nič“?",
       },
       {
         id: "id-3",
@@ -236,62 +236,13 @@ const MODULES = [
         teach:
           "Zraniteľná časť u teba býva potlačená. Dáme jej malý, bezpečný priestor.",
         practice: [
-          { type: "text", label: "Doplň: ‚Keby som sa nemusel báť, chcel by som…‘" },
-          { type: "text", label: "Doplň: ‚Dnes mi pomôže, keď…‘" },
+          { type: "text", label: "Doplň: „Keby som sa nemusel báť, chcel by som…“" },
+          { type: "text", label: "Doplň: „Dnes mi pomôže, keď…“" },
         ],
-        reflect: "Aká emócia sa objavila (1 slovo)?" ,
+        reflect: "Aká emócia sa objavila (1 slovo)?",
       },
     ],
   },
-  {
-    id: "alc",
-    title: "Alkohol – nahradiť reguláciu",
-    why: "Alkohol nie je charakter. Je to nástroj regulácie. Cieľ je mať iné nástroje a znížiť potrebu.",
-    lessons: [
-      {
-        id: "alc-1",
-        title: "Mapa spúšťačov (3 min)",
-        teach:
-          "Najprv mapujeme, nie bojujeme. Spúšťač → napätie → alkohol → úľava → dlh. Cieľ je prerušiť skôr.",
-        practice: [
-          { type: "pick", label: "Dnešný spúšťač", options: ["stres", "osamelosť", "sociálna úzkosť", "sex", "konflikt", "odmena"] },
-          { type: "text", label: "Aký bol signál v tele (1 veta)?" },
-        ],
-        reflect: "Kedy sa to začalo dnes? (čas/udalosť)" ,
-      },
-      {
-        id: "alc-2",
-        title: "Odklad 10 min (4 min)",
-        teach:
-          "Cieľ nie je ‚nikdy‘. Cieľ je získať 10 min priestoru, aby mozog prestal byť v tuneli.",
-        practice: [
-          { type: "body", label: "Keď príde chuť: nastav 10 min. Urob reg-1 dych alebo reg-2 orientáciu." },
-          { type: "pick", label: "Ktorý náhradný regulátor dnes použiješ?", options: ["dych", "sprcha", "chôdza", "jedlo", "zavolať", "hudba"] },
-        ],
-        reflect: "Po 10 min: chuť na alkohol (0–10)?" ,
-      },
-      {
-        id: "alc-3",
-        title: "Plán bezpečia (2 min)",
-        teach:
-          "Ak máš veľké pitie alebo abstinenčné príznaky, rieš to s lekárom. Toto je doplnok, nie náhrada.",
-        practice: [
-          { type: "text", label: "Jedna veta: ‚Keď to bude veľké, urobím…‘ (osoba/miesto/podpora)" },
-          { type: "text", label: "Jedna podporná aktivita na večer (konkrétne)." },
-        ],
-        reflect: "Ako reálne je dodržať plán (0–10)?" ,
-      },
-    ],
-  },
-];
-
-const DAILY_PLAN = [
-  { slot: "Warm-up", moduleId: "reg" },
-  { slot: "Core", moduleId: "dep" },
-  { slot: "Strength", moduleId: "anger" },
-  { slot: "Connection", moduleId: "intim" },
-  { slot: "Self", moduleId: "id" },
-  { slot: "Stability", moduleId: "alc" },
 ];
 
 function defaultAppState() {
@@ -313,11 +264,12 @@ function defaultAppState() {
       dailyMinutes: 15,
       intensity: "gentle", // gentle | standard
     },
+    quickTension: 5,
+    quickAnxiety: 5,
   };
 }
 
 function levelFromXP(xp) {
-  // simple curve
   return 1 + Math.floor(Math.sqrt(Math.max(0, xp)) / 5);
 }
 
@@ -328,7 +280,6 @@ function pickDailyLessons(state) {
   // Phase 3: anger
   // Phase 4: intim
   // Phase 5: id
-  // Alcohol (alc) always available but secondary
 
   const PHASES = ["reg", "dep", "anger", "intim", "id"];
 
@@ -337,13 +288,12 @@ function pickDailyLessons(state) {
 
   const currentPhaseIndex = state.currentPhaseIndex ?? 0;
   const currentModuleId = PHASES[currentPhaseIndex] ?? PHASES[PHASES.length - 1];
-
   const currentModule = MODULES.find((m) => m.id === currentModuleId);
   const done = state.lessonDone || {};
 
   const picks = [];
 
-  // Main focus: current phase module
+  // Main focus: current phase module (3 lessons)
   if (currentModule) {
     const nextLessons = currentModule.lessons.filter((l) => !done[l.id]);
     const lessonPool = nextLessons.length > 0 ? nextLessons : currentModule.lessons;
@@ -402,27 +352,11 @@ function Card({ children }) {
 function Button({ children, onClick, disabled, variant = "primary" }) {
   const base =
     "w-full rounded-xl px-4 py-2 text-sm font-medium transition active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed";
-  const styles =
-    variant === "primary"
-      ? "bg-black text-white"
-      : variant === "ghost"
-      ? "border bg-white"
-      : "border bg-white";
+  const styles = variant === "primary" ? "bg-black text-white" : "border bg-white";
   return (
     <button className={`${base} ${styles}`} onClick={onClick} disabled={disabled}>
       {children}
     </button>
-  );
-}
-
-function Input({ value, onChange, placeholder }) {
-  return (
-    <input
-      className="w-full rounded-xl border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-    />
   );
 }
 
@@ -445,6 +379,7 @@ function Segmented({ options, value, onChange }) {
           key={o.value}
           className={`rounded-xl border px-3 py-2 text-sm ${value === o.value ? "bg-black text-white" : "bg-white"}`}
           onClick={() => onChange(o.value)}
+          type="button"
         >
           {o.label}
         </button>
@@ -481,7 +416,6 @@ function LessonRunner({ pick, onComplete, intensity }) {
 
     let all = [teach, ...practice, reflect];
     if (intensity === "gentle") {
-      // reduce to teach + 1 practice + reflect
       const firstPractice = practice[0] ? [practice[0]] : [];
       all = [teach, ...firstPractice, reflect];
     }
@@ -501,33 +435,223 @@ function LessonRunner({ pick, onComplete, intensity }) {
       if (p.type === "text") return (answers[`text_${current.idx}`] || "").trim().length > 0;
       return true;
     }
-    if (current.kind === "reflect") return (answers[`reflect`] || "").toString().trim().length > 0;
+    if (current.kind === "reflect") return (answers.reflect || "").toString().trim().length > 0;
     return true;
   }, [current, answers]);
 
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="text-xs opacity-70">CPTSD Daily Practice</div>
-              <div className="text-2xl font-semibold">Tvoj systémový tréning</div>
-              <div className="mt-1 text-sm opacity-80">
-                Mikro-kroky. Bez výkonu. Bez hanby. Konzistentne.
+        <div>
+          <div className="text-xs opacity-70">{module.title}</div>
+          <div className="text-lg font-semibold leading-tight">{lesson.title}</div>
+        </div>
+        <div className="pt-1">
+          <ProgressRing value={(step + 1) / items.length} />
+        </div>
+      </div>
+
+      <div className="mt-3 rounded-xl border bg-white p-3">
+        {current?.kind === "teach" && <p className="text-sm leading-relaxed opacity-90">{current.text}</p>}
+
+        {current?.kind === "practice" && (
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Praktikum</div>
+            <div className="text-sm opacity-90">{current.p.label}</div>
+
+            {current.p.type === "pick" && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {current.p.options.map((o) => {
+                  const key = `pick_${current.idx}`;
+                  const active = answers[key] === o;
+                  return (
+                    <button
+                      key={o}
+                      onClick={() => setAnswer(key, o)}
+                      className={`rounded-full border px-3 py-1 text-sm ${active ? "bg-black text-white" : "bg-white"}`}
+                      type="button"
+                    >
+                      {o}
+                    </button>
+                  );
+                })}
               </div>
-              {(() => {
-                const PHASES = ["reg", "dep", "anger", "intim", "id"];
-                const phaseId = PHASES[state.currentPhaseIndex ?? 0] ?? "id";
-                const phaseTitle = MODULES.find((m) => m.id === phaseId)?.title || "";
-                const doneDays = state.phaseDoneDays ?? 0;
-                const target = state.phaseTargetDays ?? 20;
-                return (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <Chip>Fáza: {phaseTitle}</Chip>
-                    <Chip>Fázové dni: {doneDays}/{target}</Chip>
-                  </div>
-                );
-              })()}
+            )}
+
+            {current.p.type === "text" && (
+              <Textarea
+                value={answers[`text_${current.idx}`] || ""}
+                onChange={(v) => setAnswer(`text_${current.idx}`, v)}
+                placeholder="Napíš 1–3 vety…"
+              />
+            )}
+
+            {(current.p.type === "body" || current.p.type === "breath") && (
+              <div className="text-xs opacity-70">Tip: nastav si časovač. Cieľ je „urobiť“, nie „cítiť perfektne“.</div>
+            )}
+          </div>
+        )}
+
+        {current?.kind === "reflect" && (
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Reflexia</div>
+            <div className="text-sm opacity-90">{current.text}</div>
+            <Textarea value={answers.reflect || ""} onChange={(v) => setAnswer("reflect", v)} placeholder="Krátko, úprimne…" />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-3 flex items-center gap-2">
+        <button
+          className="w-full rounded-xl border bg-white px-4 py-2 text-sm"
+          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          disabled={step === 0}
+          type="button"
+        >
+          Späť
+        </button>
+
+        {step < items.length - 1 ? (
+          <Button onClick={() => setStep((s) => s + 1)} disabled={!canNext}>
+            Ďalej
+          </Button>
+        ) : (
+          <Button
+            onClick={() => onComplete({ moduleId: module.id, lessonId: lesson.id, lessonTitle: lesson.title, answers })}
+            disabled={!canNext}
+          >
+            Hotovo
+          </Button>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function StatTile({ label, value }) {
+  return (
+    <div className="rounded-2xl border bg-white p-3">
+      <div className="text-xs opacity-70">{label}</div>
+      <div className="mt-0.5 text-lg font-semibold tabular-nums">{value}</div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [state, setState] = useState(() => loadState() || defaultAppState());
+  const [tab, setTab] = useState("today"); // today | modules | journal | settings
+  const [activePickIdx, setActivePickIdx] = useState(0);
+
+  useEffect(() => {
+    saveState(state);
+  }, [state]);
+
+  const dailyPicks = useMemo(() => pickDailyLessons(state), [state]);
+  const activePick = dailyPicks[activePickIdx];
+
+  const level = useMemo(() => levelFromXP(state.xp), [state.xp]);
+
+  useEffect(() => {
+    if (level !== state.level) setState((s) => ({ ...s, level }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
+
+  const doneToday = state.lastDoneDate === todayISO();
+
+  const completeLesson = ({ moduleId, lessonId, lessonTitle, answers }) => {
+    setState((s) => {
+      const prev = { ...s };
+      const now = todayISO();
+      const streakInfo = computeStreak(prev.lastDoneDate, prev.streak);
+
+      const xpGain = 10;
+      const modGain = 10;
+
+      const journalEntry = {
+        date: now,
+        moduleId,
+        lessonId,
+        lessonTitle,
+        answers,
+        ts: new Date().toISOString(),
+      };
+
+      // Phase accounting (Option B): count a day once if a lesson from current phase is completed that day.
+      const PHASES = ["reg", "dep", "anger", "intim", "id"];
+      const currentPhaseIndex = prev.currentPhaseIndex ?? 0;
+      const currentPhaseModuleId = PHASES[currentPhaseIndex] ?? PHASES[PHASES.length - 1];
+      const phaseTargetDays = prev.phaseTargetDays ?? 20;
+
+      let phaseDoneDays = prev.phaseDoneDays ?? 0;
+      let phaseLastCountedDate = prev.phaseLastCountedDate ?? null;
+      let newPhaseIndex = currentPhaseIndex;
+
+      const isFirstCountToday = phaseLastCountedDate !== now;
+      const countsForPhase = moduleId === currentPhaseModuleId;
+
+      if (isFirstCountToday && countsForPhase) {
+        phaseDoneDays += 1;
+        phaseLastCountedDate = now;
+      }
+
+      // Auto-advance
+      if (phaseDoneDays >= phaseTargetDays && newPhaseIndex < PHASES.length - 1) {
+        newPhaseIndex += 1;
+        phaseDoneDays = 0;
+        phaseLastCountedDate = null;
+      }
+
+      const newXP = (prev.xp || 0) + xpGain;
+
+      return {
+        ...prev,
+        lastDoneDate: now,
+        streak: streakInfo.status === "today" ? prev.streak : streakInfo.streak,
+        xp: newXP,
+        level: levelFromXP(newXP),
+        moduleXP: { ...prev.moduleXP, [moduleId]: (prev.moduleXP?.[moduleId] || 0) + modGain },
+        lessonDone: { ...prev.lessonDone, [lessonId]: true },
+        journal: [journalEntry, ...(prev.journal || [])].slice(0, 200),
+        currentPhaseIndex: newPhaseIndex,
+        phaseDoneDays,
+        phaseLastCountedDate,
+      };
+    });
+
+    setActivePickIdx((i) => Math.min(dailyPicks.length - 1, i + 1));
+  };
+
+  const resetProgress = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!confirm("Naozaj chceš vymazať progres?")) return;
+    setState(defaultAppState());
+  };
+
+  const phaseInfo = useMemo(() => {
+    const PHASES = ["reg", "dep", "anger", "intim", "id"];
+    const phaseId = PHASES[state.currentPhaseIndex ?? 0] ?? "id";
+    const phaseTitle = MODULES.find((m) => m.id === phaseId)?.title || phaseId;
+    const doneDays = state.phaseDoneDays ?? 0;
+    const target = state.phaseTargetDays ?? 20;
+    return { phaseId, phaseTitle, doneDays, target };
+  }, [state.currentPhaseIndex, state.phaseDoneDays, state.phaseTargetDays]);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white p-4 text-zinc-900">
+      <div className="mx-auto w-full max-w-3xl space-y-4">
+        <header className="flex flex-col gap-3 rounded-3xl border bg-white p-4 shadow-sm">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-xs opacity-70">Baseline</div>
+              <div className="text-2xl font-semibold">Systémový tréning</div>
+              <div className="mt-1 text-sm opacity-80">Mikro-kroky. Bez výkonu. Bez hanby. Konzistentne.</div>
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Chip>Fáza: {phaseInfo.phaseTitle}</Chip>
+                <Chip>Fázové dni: {phaseInfo.doneDays}/{phaseInfo.target}</Chip>
+              </div>
             </div>
+
             <div className="flex flex-col items-end gap-2">
               <div className="flex items-center gap-2">
                 <Chip>Level {state.level}</Chip>
@@ -555,13 +679,14 @@ function LessonRunner({ pick, onComplete, intensity }) {
                 key={t.id}
                 className={`rounded-xl border px-3 py-2 text-sm ${tab === t.id ? "bg-black text-white" : "bg-white"}`}
                 onClick={() => setTab(t.id)}
+                type="button"
               >
                 {t.label}
               </button>
             ))}
           </nav>
-        </Card>
-)
+        </header>
+
         {tab === "today" && (
           <div className="space-y-4">
             <Card>
@@ -569,11 +694,12 @@ function LessonRunner({ pick, onComplete, intensity }) {
                 <div>
                   <div className="text-sm font-semibold">Dnešný plán</div>
                   <div className="mt-1 text-sm opacity-80">
-                    Vybrané podľa toho, kde máš najmenej XP. Cieľ: 2–4 mikrolekcie.
+                    3 lekcie z aktuálnej fázy + 1 regulačná kotva.
                   </div>
                 </div>
                 <Chip>{dailyPicks.length} lekcie</Chip>
               </div>
+
               <div className="mt-3 grid gap-2 md:grid-cols-3">
                 {dailyPicks.map((p, idx) => {
                   const done = !!state.lessonDone?.[p.lesson.id];
@@ -582,6 +708,7 @@ function LessonRunner({ pick, onComplete, intensity }) {
                       key={p.lesson.id}
                       onClick={() => setActivePickIdx(idx)}
                       className={`rounded-2xl border p-3 text-left transition ${idx === activePickIdx ? "bg-zinc-50" : "bg-white"}`}
+                      type="button"
                     >
                       <div className="text-xs opacity-70">{p.module.title}</div>
                       <div className="mt-0.5 text-sm font-medium">{p.lesson.title}</div>
@@ -608,21 +735,15 @@ function LessonRunner({ pick, onComplete, intensity }) {
               <div className="mt-2 grid gap-3 md:grid-cols-2">
                 <div>
                   <div className="text-xs opacity-70">Napätie v tele</div>
-                  <Slider
-                    value={state.quickTension ?? 5}
-                    onChange={(v) => setState((s) => ({ ...s, quickTension: v }))}
-                  />
+                  <Slider value={state.quickTension ?? 5} onChange={(v) => setState((s) => ({ ...s, quickTension: v }))} />
                 </div>
                 <div>
                   <div className="text-xs opacity-70">Úzkosť</div>
-                  <Slider
-                    value={state.quickAnxiety ?? 5}
-                    onChange={(v) => setState((s) => ({ ...s, quickAnxiety: v }))}
-                  />
+                  <Slider value={state.quickAnxiety ?? 5} onChange={(v) => setState((s) => ({ ...s, quickAnxiety: v }))} />
                 </div>
               </div>
               <div className="mt-3 text-xs opacity-70">
-                Tip: ak je napätie ≥7, daj si najprv jednu lekciu z „Telo a regulácia“.
+                Tip: ak je napätie ≥7, daj si najprv jednu lekciu z „Regulácia nervového systému“.
               </div>
             </Card>
           </div>
@@ -639,6 +760,7 @@ function LessonRunner({ pick, onComplete, intensity }) {
                   </div>
                   <Chip>XP {state.moduleXP?.[m.id] ?? 0}</Chip>
                 </div>
+
                 <div className="mt-3 grid gap-2 md:grid-cols-3">
                   {m.lessons.map((l) => {
                     const done = !!state.lessonDone?.[l.id];
@@ -678,9 +800,7 @@ function LessonRunner({ pick, onComplete, intensity }) {
                     <div>
                       <div className="text-xs opacity-70">{j.date}</div>
                       <div className="text-sm font-semibold">{j.lessonTitle}</div>
-                      <div className="mt-0.5 text-xs opacity-70">
-                        {MODULES.find((m) => m.id === j.moduleId)?.title}
-                      </div>
+                      <div className="mt-0.5 text-xs opacity-70">{MODULES.find((m) => m.id === j.moduleId)?.title}</div>
                     </div>
                     <Chip>+10 XP</Chip>
                   </div>
@@ -700,21 +820,19 @@ function LessonRunner({ pick, onComplete, intensity }) {
           <div className="space-y-3">
             <Card>
               <div className="text-sm font-semibold">Nastavenia</div>
-              <div className="mt-1 text-sm opacity-80">
-                Udržateľnosť > intenzita. Ak sa systém preťaží, zníž minúty alebo prepni na jemnú.
-              </div>
+              <div className="mt-1 text-sm opacity-80">Udržateľnosť &gt; intenzita. Keď sa systém preťaží, zníž intenzitu.</div>
             </Card>
 
             <Card>
               <div className="text-sm font-medium">Denný čas</div>
               <div className="mt-2">
                 <Slider
-                  min={4}
+                  min={10}
                   max={15}
                   value={state.settings.dailyMinutes}
                   onChange={(v) => setState((s) => ({ ...s, settings: { ...s.settings, dailyMinutes: v } }))}
                 />
-                <div className="mt-1 text-xs opacity-70">Odporúčanie: 6–10 min.</div>
+                <div className="mt-1 text-xs opacity-70">Odporúčanie: 15 min.</div>
               </div>
             </Card>
 
@@ -733,6 +851,20 @@ function LessonRunner({ pick, onComplete, intensity }) {
             </Card>
 
             <Card>
+              <div className="text-sm font-medium">Fázový cieľ</div>
+              <div className="mt-1 text-sm opacity-80">Koľko dní konzistencie na jednu fázu.</div>
+              <div className="mt-2">
+                <Slider
+                  min={10}
+                  max={30}
+                  value={state.phaseTargetDays ?? 20}
+                  onChange={(v) => setState((s) => ({ ...s, phaseTargetDays: v }))}
+                />
+              </div>
+              <div className="mt-1 text-xs opacity-70">Aktuálne: {state.phaseTargetDays ?? 20} dní</div>
+            </Card>
+
+            <Card>
               <div className="text-sm font-medium">Reset</div>
               <div className="mt-2 text-sm opacity-80">Ak chceš začať odznova.</div>
               <div className="mt-3">
@@ -745,19 +877,14 @@ function LessonRunner({ pick, onComplete, intensity }) {
             <Card>
               <div className="text-xs opacity-70">
                 Bezpečnostná poznámka: Ak máš výrazné pitie a prestávky spôsobujú tras, potenie, nespavosť alebo paniku,
-                je bezpečnejšie riešiť to s lekárom. Tento prototyp je tréning návykov, nie medicínska liečba.
+                je bezpečnejšie riešiť to s lekárom. Baseline je tréning návykov, nie medicínska liečba.
               </div>
             </Card>
           </div>
         )}
 
-        <footer className="pb-10 pt-2 text-center text-xs opacity-60">
-          MVP prototyp • lokálne ukladanie • trauma‑informed mikro‑kroky
-        </footer>
+        <footer className="pb-10 pt-2 text-center text-xs opacity-60">Baseline • MVP • lokálne ukladanie</footer>
       </div>
-        </div>  
     </div>
   );
 }
-
-export default App;
