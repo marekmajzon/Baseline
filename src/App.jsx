@@ -883,7 +883,9 @@ export default function App() {
           </div>
         )}
 
-        <footer className="pb-10 pt-2 text-center text-xs opacity-60">Baseline • MVP • lokálne ukladanie</footer>
+              <footer className="pb-10 pt-2 text-center text-xs opacity-60">
+          Baseline • MVP • lokálne ukladanie • trauma-informed mikro-kroky
+        </footer>
       </div>
     </div>
   );
