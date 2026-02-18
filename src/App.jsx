@@ -775,6 +775,7 @@ export default function App() {
                     );
                   })}
                 </div>
+                </div>
               </Card>
             ))}
           </div>
@@ -884,9 +885,4 @@ export default function App() {
         )}
 
               <footer className="pb-10 pt-2 text-center text-xs opacity-60">
-          Baseline • MVP • lokálne ukladanie • trauma-informed mikro-kroky
-        </footer>
-      </div>
-    </div>
-  );
-}
+         
