@@ -749,37 +749,37 @@ export default function App() {
           </div>
         )}
 
-        {tab === "modules" && (
-          <div className="grid gap-3">
-            {MODULES.map((m) => (
-              <Card key={m.id}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-lg font-semibold">{m.title}</div>
-                    <div className="mt-1 text-sm opacity-80">{m.why}</div>
-                  </div>
-                  <Chip>XP {state.moduleXP?.[m.id] ?? 0}</Chip>
-                </div>
-
-                <div className="mt-3 grid gap-2 md:grid-cols-3">
-                  {m.lessons.map((l) => {
-                    const done = !!state.lessonDone?.[l.id];
-                    return (
-                      <div key={l.id} className="rounded-2xl border bg-white p-3">
-                        <div className="text-sm font-medium">{l.title}</div>
-                        <div className="mt-2 flex items-center justify-between">
-                          <Chip>{done ? "hotovo" : "nezačaté"}</Chip>
-                          <span className="text-xs opacity-60">10 XP</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                </div>
-              </Card>
-            ))}
+       {tab === "modules" && (
+  <div className="grid gap-3">
+    {MODULES.map((m) => (
+      <Card key={m.id}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-lg font-semibold">{m.title}</div>
+            <div className="mt-1 text-sm opacity-80">{m.why}</div>
           </div>
-        )}
+          <Chip>XP {state.moduleXP?.[m.id] ?? 0}</Chip>
+        </div>
+
+        <div className="mt-3 grid gap-2 md:grid-cols-3">
+          {m.lessons.map((l) => {
+            const done = !!state.lessonDone?.[l.id];
+            return (
+              <div key={l.id} className="rounded-2xl border bg-white p-3">
+                <div className="text-sm font-medium">{l.title}</div>
+                <div className="mt-2 flex items-center justify-between">
+                  <Chip>{done ? "hotovo" : "nezačaté"}</Chip>
+                  <span className="text-xs opacity-60">10 XP</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+    ))}
+  </div>
+)}
+
 
         {tab === "journal" && (
           <div className="space-y-3">
