@@ -883,6 +883,3 @@ export default function App() {
             </Card>
           </div>
         )}
-
-              <footer className="pb-10 pt-2 text-center text-xs opacity-60">
-         
